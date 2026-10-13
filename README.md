@@ -1,10 +1,12 @@
 # Wasabi Coordinator Regtest on StartOS
 
+This development package is on the `regtest` branch of [remcoros/wasabi-coordinator-startos](https://github.com/remcoros/wasabi-coordinator-startos). It shares the Mainnet wrapper's history and keeps its own package ID, private Bitcoin node, and test actions.
+
 This is a local development package for exercising real CoinJoin rounds on StartOS with disposable regtest coins. Mainnet and Testnet4 remain separate production packages. Regtest is fixed for this package and is not a production configuration option.
 
 ## Image and Container Runtime
 
-The coordinator image builds directly from the sibling `../wasabi-coordinator-startos` workspace, including its current signed upstream coordinator and package helper. The signed coordinator runtime includes the native WabiSabi credential library for the selected architecture. The private node image uses the existing Bitcoin package Dockerfile from the locked npm dependency, with its release-signature quorum and SHA-256 verification. A separate runner image contains the scenario program and the same signed Wasabi libraries. `Dockerfile.runner` and its helper build inputs must track the sibling Dockerfile and `docker/helper` source.
+The coordinator image builds from this branch's `Dockerfile`, matching the Mainnet wrapper's signed upstream coordinator and package helper. The signed coordinator runtime includes the native WabiSabi credential library for the selected architecture. The private node image uses the existing Bitcoin package Dockerfile from the locked npm dependency, with its release-signature quorum and SHA-256 verification. A separate runner image contains the scenario program and the same signed Wasabi libraries. `Dockerfile.runner` and its helper build inputs must track `Dockerfile` and `docker/helper`. No sibling checkout is required to build the package.
 
 Subcontainers are `coordinator-sub`, `regtest-node-sub`, and a temporary test subcontainer per action. The SDK runs `/opt/coordinator/wcoordinator` directly from `/opt/coordinator` with a 60-second SIGTERM timeout. When Tor is enabled, the package adds the shared proxy environment. Native exits reach SDK crash reporting and restart/backoff. The C# helper retains readiness probes and discovery, without a supervisor loop. The coordinator owns its container; discovery retains the process-only lifecycle used by the production wrapper. The lab does not publish to a registry automatically.
 
@@ -60,4 +62,4 @@ This package validates a regtest variant of the shared wrapper, with an embedded
 
 ## Quick Reference for AI Consumers
 
-Package ID: `wasabi-coordinator-regtest`. Build on the packaging workspace with the Mainnet sibling present. Use `make x86` for the current test server. No release workflow, commit, push, or registry publication is part of this local lab.
+Package ID: `wasabi-coordinator-regtest`. Use `make x86` for the current test server. PR builds cover `main`, `testnet4`, and `regtest`. Pushing a manual tag such as `v2.8.4_0-regtest` builds signed release assets through Start9's reusable release workflow. Branch pushes do not release packages automatically. Registry publication is optional and uses the shared repository's release settings.

@@ -1,0 +1,37 @@
+# syntax=docker/dockerfile:1
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:e70cdb7f80b0348f5cb85f19a8f670fca061f033d57eed12fa003d58b0e06317 AS build
+ARG TARGETARCH
+ARG WASABI_VERSION=2.8.4
+ARG WASABI_SIGNING_FINGERPRINT=6FB3872B5D42292F59920797856348328949861E
+RUN apt-get update && apt-get install -y --no-install-recommends curl jq gnupg ca-certificates && rm -rf /var/lib/apt/lists/*
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+WORKDIR /tmp
+RUN set -eu; \
+    case "$TARGETARCH" in amd64) WASABI_ARCH=x64 ;; arm64) WASABI_ARCH=arm64 ;; *) exit 1 ;; esac; \
+    ARCHIVE="Wasabi-${WASABI_VERSION}-linux-${WASABI_ARCH}.tar.gz"; \
+    curl --fail --location --retry 3 --output "$ARCHIVE" "https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/${ARCHIVE}"; \
+    curl --fail --location --retry 3 --output "$ARCHIVE.asc" "https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/${ARCHIVE}.asc"; \
+    curl --fail --location --retry 3 --output SHA256SUMS.asc "https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/SHA256SUMS.asc"; \
+    curl --fail --location --retry 3 --output PGP.txt "https://raw.githubusercontent.com/WalletWasabi/WalletWasabi/v${WASABI_VERSION}/PGP.txt"; \
+    gpg --batch --import PGP.txt; \
+    gpg --batch --status-fd 1 --verify "$ARCHIVE.asc" "$ARCHIVE" | grep "^\[GNUPG:\] VALIDSIG ${WASABI_SIGNING_FINGERPRINT} "; \
+    gpg --batch --status-fd 1 --output SHA256SUMS --decrypt SHA256SUMS.asc | grep "^\[GNUPG:\] VALIDSIG ${WASABI_SIGNING_FINGERPRINT} "; \
+    sha256sum --check --strict --ignore-missing SHA256SUMS; \
+    mkdir upstream; \
+    tar -xzf "$ARCHIVE" -C upstream; \
+    rm "$ARCHIVE" "$ARCHIVE.asc" SHA256SUMS.asc SHA256SUMS PGP.txt; \
+    rm -rf /root/.gnupg
+# Include the coordinator and its signed dependency manifest's runtime assets.
+RUN set -eu; \
+    mkdir /coordinator; \
+    printf '%s\n' wcoordinator WalletWasabi.Coordinator.dll WalletWasabi.Coordinator.deps.json WalletWasabi.Coordinator.runtimeconfig.json > coordinator-files; \
+    jq -r '. as $deps | .targets[$deps.runtimeTarget.name][] | ((.runtime // {}), (.native // {})) | keys[] | split("/")[-1] | select(. != "_._")' upstream/WasabiWallet/WalletWasabi.Coordinator.deps.json >> coordinator-files; \
+    sort -u coordinator-files | while IFS= read -r FILE; do cp -p "upstream/WasabiWallet/$FILE" "/coordinator/$FILE"; done
+COPY docker/helper /src
+RUN dotnet publish /src/StartOsHelper.csproj -c Release -o /helper --no-self-contained -p:UseAppHost=false -p:ReferencePath=/coordinator
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4
+COPY --from=build /coordinator /opt/coordinator
+COPY --from=build /helper /opt/coordinator
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+WORKDIR /opt/coordinator

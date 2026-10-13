@@ -5,7 +5,7 @@ export const manifest = setupManifest({
   id: 'wasabi-coordinator-regtest',
   title: 'Wasabi Coordinator Regtest',
   license: 'MIT',
-  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-regtest-startos',
+  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-startos',
   upstreamRepo: 'https://github.com/WalletWasabi/WalletWasabi',
   marketingUrl: 'https://wasabiwallet.io/',
   donationUrl: null,
@@ -13,7 +13,7 @@ export const manifest = setupManifest({
   volumes: ['main', 'startos', 'bitcoin'],
   images: {
     coordinator: {
-      source: { dockerBuild: { workdir: '../wasabi-coordinator-startos' } },
+      source: { dockerBuild: {} },
       arch: ['x86_64', 'aarch64'],
     },
     bitcoind: {
