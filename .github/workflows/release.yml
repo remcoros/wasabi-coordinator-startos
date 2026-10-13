@@ -3,7 +3,9 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*'
+      - 'v*.*_*'
+      - '!v*.*_*-testnet4'
+      - '!v*.*_*-regtest'
 
 jobs:
   release:

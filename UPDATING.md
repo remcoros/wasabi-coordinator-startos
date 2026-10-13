@@ -1,5 +1,21 @@
 # Updating Wasabi Coordinator
 
+## Branches and releases
+
+The shared repository is `https://github.com/remcoros/wasabi-coordinator-startos`. Carry shared fixes from `main` to `testnet4` and `regtest`, preserving each branch's network and dependency settings.
+
+| Branch | Package ID | Example release tag |
+| --- | --- | --- |
+| `main` | `wasabi-coordinator` | `v2.8.4_0` |
+| `testnet4` | `wasabi-coordinator-testnet` | `v2.8.4_0-testnet4` |
+| `regtest` | `wasabi-coordinator-regtest` | `v2.8.4_0-regtest` |
+
+Releases start only when a matching tag is pushed manually. Create each tag on the corresponding branch's release commit and push that tag individually. Branch pushes do not tag or release packages automatically. The suffix identifies the Git tag; the package version remains `2.8.4:0`.
+
+The release delegates to Start9's reusable workflow, which checks out the tag and reads the package ID and version from source. Configure the shared repository's `DEV_KEY` secret for signed builds. `RELEASE_REGISTRY` is optional for registry publication; GitHub release assets are produced without it. S3 settings are optional. PR builds cover all three branches, and branch pushes sync their paired iteration branches.
+
+## Upstream updates
+
 The coordinator executable and its runtime libraries come from the official Linux release archives. The package's `Dockerfile` pins the upstream version and the release-signing fingerprint; `startos/versions/current.ts` carries the StartOS package version. The image builds from the signed x64 and ARM64 archives. Both signatures and the signed SHA-256 list must verify in Docker before extraction. Do not substitute unsigned binaries or copy the wallet executables into the final image.
 
 1. Confirm the desired tag in [WalletWasabi releases](https://github.com/WalletWasabi/WalletWasabi/releases) and read its upstream change notes. Confirm Linux x64 and ARM64 archives, matching detached `.asc` signatures, and a clearsigned `SHA256SUMS.asc` exist.

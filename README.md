@@ -8,6 +8,8 @@
 
 This package runs the coordinator from [WalletWasabi](https://github.com/WalletWasabi/WalletWasabi), serving WabiSabi CoinJoin rounds to compatible wallets. It does not run the Wasabi wallet.
 
+The Mainnet, Testnet4, and regtest packages use [remcoros/wasabi-coordinator-startos](https://github.com/remcoros/wasabi-coordinator-startos) on `main`, `testnet4`, and `regtest`, respectively. Each has a separate package ID. Mainnet and Testnet4 use their corresponding Bitcoin dependencies; regtest includes its own private node.
+
 ## Table of Contents
 
 - [Image and Container Runtime](#image-and-container-runtime)
