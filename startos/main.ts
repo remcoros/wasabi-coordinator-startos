@@ -13,17 +13,11 @@ import {
   profile,
   hasReceivingAccount,
 } from './utils'
+import { addRegtestNode } from './lab'
 
 export const main = sdk.setupMain(async ({ effects }) => {
   const useTor = await store.read((s) => s.useTor).const(effects)
-  const bitcoin = await sdk.host
-    .getBridgeAddress(effects, {
-      packageId: profile.bitcoinId,
-      hostId: profile.rpcHostId,
-      internalPort: profile.rpcPort,
-      ssl: false,
-    })
-    .const()
+  const bitcoin = '127.0.0.1:18443'
   const tor = useTor
     ? await sdk.host
         .getBridgeAddress(effects, {
@@ -36,12 +30,10 @@ export const main = sdk.setupMain(async ({ effects }) => {
   const account = await config
     .read((c) => c.CoordinatorExtPubKey)
     .const(effects)
-  if (!bitcoin || (useTor && !tor) || !hasReceivingAccount(account)) {
+  if ((useTor && !tor) || !hasReceivingAccount(account)) {
     const message = !hasReceivingAccount(account)
       ? i18n('Set the receiving account before starting.')
-      : !bitcoin
-        ? i18n('Bitcoin is unavailable.')
-        : i18n('Tor is unavailable.')
+      : i18n('Tor is unavailable.')
     return sdk.Daemons.of(effects).addHealthCheck('coordinator', {
       ready: {
         display: i18n('Coordinator'),
@@ -69,9 +61,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
         mountpoint: '/startos',
         readonly: false,
       })
-      .mountDependency({
-        dependencyId: profile.bitcoinId,
-        volumeId: 'main',
+      .mountVolume({
+        volumeId: 'bitcoin',
         subpath: null,
         mountpoint: '/mnt/bitcoin',
         readonly: true,
@@ -120,7 +111,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
               .const(discoveryEffects)) ?? '',
         }
       : null
-    const chain = sdk.Daemons.of(discoveryEffects)
+    const chain = addRegtestNode(effects, sdk.Daemons.of(discoveryEffects))
       .addOneshot('bitcoin-ready', {
         subcontainer: sub,
         exec: { command: [...helperCommand, 'check-bitcoin'], env },
@@ -147,7 +138,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
               ),
             ),
         },
-        requires: [],
+        requires: ['prepare-lab'],
       })
       .addHealthCheck('tor', () =>
         useTor

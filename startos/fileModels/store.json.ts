@@ -12,7 +12,7 @@ export const announcementShape = z.looseObject({
 export const store = FileHelper.json(
   { base: sdk.volumes.startos, subpath: 'store.json' },
   z.looseObject({
-    useTor: z.boolean().catch(true),
+    useTor: z.boolean().catch(false),
     discoveryEnabled: z.boolean().catch(false),
     primaryUrl: z.string().nullable().catch(null),
     announcement: announcementShape.nullable().catch(null),

@@ -1,34 +1,28 @@
-# Wasabi Coordinator
+# Wasabi Coordinator Regtest
 
 ## Documentation
 
-- [Wasabi documentation](https://docs.wasabiwallet.io/) — wallet compatibility, CoinJoin operation, and connecting to a coordinator.
+- [Wasabi documentation](https://docs.wasabiwallet.io/) — CoinJoin operation and wallet compatibility.
 
 ## What you get on StartOS
 
-The **Coordinator** interface is the address compatible wallets use to join your rounds. **Round Status** shows current rounds and their registered input counts. StartOS also gives you actions for receiving funds left over from rounds, setting round policy, and optionally announcing your coordinator.
+This lab runs a coordinator and a private Bitcoin regtest node. It creates its own test coins and participants. You do not need a faucet, a funded wallet, or other people to join the tests.
 
-## Getting set up
+## Running tests
 
-1. Install Bitcoin and wait for it to finish synchronizing.
-2. In a wallet you control, export the native SegWit **account public key (xpub)** and copy its receiving address at index 1. Never enter a seed or private key.
-3. Under **1. Setup**, run **Set Receiving Account** and enter both values. Startup remains blocked until they match.
-4. Tor is enabled by default. Install Tor, or turn it off with **Configure Tor** under **4. Advanced** before starting.
-5. Under **2. Round Settings**, review **Configure Rounds** if you want different input counts or amounts. The default requires 50 of a maximum of 100 inputs.
-6. Share the **Coordinator** address with compatible wallets. To get a wallet connection string, enable a public interface address, choose it in **Configure Discovery** under **3. Discovery**, then run **Show Wallet Connection**. Nostr announcements can remain off.
+1. Start the lab. Wait for Bitcoin and Coordinator health to become ready.
+2. Under **5. RegTest Tests**, run **Show Regtest Status** to check the node and round.
+3. Run **Test Complete CoinJoin**. The result should show a completed transaction, its input and output counts, mining fee, and a confirmation.
+4. Restart the lab, then run **Show Regtest Status** again. The previously tested transaction should still have a confirmation.
 
-## Running your coordinator
+If the private Bitcoin node becomes unavailable, its health check shows the problem. Wait for health to recover and run the test again. Run one test at a time. Copy the returned report if you want to keep or share the result. **Round Status** shows the round while a test is running.
 
-Use **Round Status** to see whether a round is available and how many inputs it has. **Configure Round Timing** controls how long wallets have to take each step. **Configure Mining Fees** sets the confirmation target for fee estimates. Address types, bans, and the handling of leftover funds are under **4. Advanced**. **Trim Coordinator Output** can reduce the amount sent to your receiving account and add the difference to mining fees. It can still create a receiving output, and keeps the original amount when no suitable smaller amount is available.
+If you changed the round settings and want to return to small, quick tests, run **Use Quick Round Settings**.
 
-Nostr discovery is optional. Enable a public address for the Coordinator interface, then open **Configure Discovery** under **3. Discovery**. Choose the announcement address, enter the name and description wallets will see, and turn on **Enable Nostr Announcements** if you want to publish on Nostr. Choose **No Announcement Address** and leave announcements off if you do not need discovery or a connection string. The coordinator remains usable without Nostr discovery. StartOS controls whether a wallet can reach the enabled address over Tor, a public domain, or another route.
+## Test data
 
-**Configure Tor** controls outbound connections to public fee services and Nostr relays. When it is off, those connections go directly from your server. Bitcoin RPC remains on the private StartOS network. StartOS Interfaces separately control how wallets reach the coordinator.
+All coins and participant keys used by the tests are disposable regtest data. Use the generated receiving account and keep discovery disabled for ordinary protocol tests. Do not import a real wallet into this lab.
 
-Ongoing rounds continue while discovery updates. Discovery reports success after a relay accepts an announcement for your current address and settings.
+Tor is off by default. Enable it with **Configure Tor** only if you want public fee or Nostr relay connections to use Tor. StartOS Interfaces separately control how wallets reach the coordinator.
 
-In **Configure Discovery**, enter one or more relay URLs. At least one relay must be reachable and accept your announcement.
-
-## Limitations
-
-The coordinator does not hold spending keys or charge a coordination fee. Eligible leftover funds can be sent to the receiving account you choose; mining fees still apply. Check the receiving account carefully before changing it. New bans can be lost when you restart, and retry rounds may still require the normal minimum number of inputs. Bitcoin must be ready before startup. When Tor is enabled, it must also be ready. A dependency outage appears in health checks and can pause discovery. Restore the dependency and check **Round Status**.
+Restarting preserves the private chain and reports. Uninstalling and reinstalling creates a fresh lab. The Mainnet and Testnet4 Bitcoin services are separate from this lab.

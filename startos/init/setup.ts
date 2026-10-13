@@ -1,5 +1,6 @@
 import { chmod, mkdir } from 'node:fs/promises'
 import { randomBytes } from 'node:crypto'
+import { HDKey } from '@scure/bip32'
 import { bech32 } from '@scure/base'
 import { sdk } from '../sdk'
 import { config } from '../fileModels/config'
@@ -14,6 +15,13 @@ export const seed = sdk.setupOnInit(async (effects) => {
   await store.merge(effects, {})
   if (!(await store.read((s) => s.announcement).once()))
     await store.merge(effects, { announcement: announcementShape.parse({}) })
+  if (!(await config.read((c) => c.CoordinatorExtPubKey).once()))
+    await config.merge(effects, {
+      CoordinatorExtPubKey: HDKey.fromMasterSeed(randomBytes(32), {
+        private: 0x04358394,
+        public: 0x043587cf,
+      }).derive("m/84'/1'/0'").publicExtendedKey,
+    })
   const key = await config.read((c) => c.AnnouncerConfig.Key).once()
   if (!key)
     await config.merge(effects, {

@@ -6,5 +6,7 @@ node_modules/
 docker-images
 javascript
 ncc-cache
+docker/runner/bin/
+docker/runner/obj/
 docker/helper/bin/
 docker/helper/obj/

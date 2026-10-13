@@ -8,7 +8,10 @@ import { configureRounds } from './configureRounds'
 import { configureRoundTiming } from './configureRoundTiming'
 import { configureTor } from './configureTor'
 import { setReceivingAccount } from './setReceivingAccount'
+import { showRegtestStatus } from './showRegtestStatus'
 import { showWalletConnection } from './showWalletConnection'
+import { testCompleteCoinJoin } from './testCompleteCoinJoin'
+import { useQuickRoundSettings } from './useQuickRoundSettings'
 
 export const actions = sdk.Actions.of()
   .addAction(setReceivingAccount)
@@ -21,3 +24,6 @@ export const actions = sdk.Actions.of()
   .addAction(configureTor)
   .addAction(configureDiscovery)
   .addAction(showWalletConnection)
+  .addAction(useQuickRoundSettings)
+  .addAction(showRegtestStatus)
+  .addAction(testCompleteCoinJoin)

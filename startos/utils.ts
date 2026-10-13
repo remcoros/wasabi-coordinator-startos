@@ -8,11 +8,6 @@ import { sdk } from './sdk'
 import { i18n } from './i18n'
 import { I18nKey } from './i18n/dictionaries/default'
 import { store } from './fileModels/store.json'
-import {
-  rpcHostId,
-  rpcPort,
-  rpccookiefile,
-} from 'bitcoin-core-startos/startos/utils'
 
 export const announcementAddresses = (effects: T.Effects) =>
   sdk.host.getOwn(effects, 'coordinator', (host) => {
@@ -41,16 +36,16 @@ export const announcementUrl = {
 }
 
 export const profile = {
-  network: 'Main',
-  chain: 'main',
-  discoveryNetwork: 'mainnet',
-  addressPrefix: 'bc',
-  keyVersions: [0x0488b21e, 0x04b24746], // xpub, zpub
-  bitcoinId: 'bitcoind',
-  rpcConfigKey: 'MainNetBitcoinRpcUri',
-  rpcHostId,
-  rpcPort,
-  cookiePath: '/mnt/bitcoin/' + rpccookiefile,
+  network: 'RegTest',
+  chain: 'regtest',
+  discoveryNetwork: 'regtest',
+  addressPrefix: 'bcrt',
+  keyVersions: [0x043587cf, 0x045f1cf6], // tpub, vpub
+  bitcoinId: 'wasabi-coordinator-regtest',
+  rpcConfigKey: 'RegTestBitcoinRpcUri',
+  rpcHostId: 'regtest',
+  rpcPort: 18443,
+  cookiePath: '/mnt/bitcoin/regtest/.cookie',
 } as const
 export const coordinatorPort = 37126
 export const helperCommand: [string, ...string[]] = [

@@ -16,11 +16,11 @@ export const configureTor = sdk.Action.withInput(
       description: i18n(
         'When off, public fee services and Nostr relays receive direct connections from this server.',
       ),
-      default: true,
+      default: false,
     }),
   }),
   async () => ({
-    enabled: (await store.read((s) => s.useTor).once()) ?? true,
+    enabled: (await store.read((s) => s.useTor).once()) ?? false,
   }),
   async ({ effects, input }) => {
     await store.merge(effects, { useTor: input.enabled })

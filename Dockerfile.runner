@@ -30,8 +30,15 @@ RUN set -eu; \
 COPY docker/helper /src
 RUN dotnet publish /src/StartOsHelper.csproj -c Release -o /helper --no-self-contained -p:UseAppHost=false -p:ReferencePath=/coordinator
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4
+FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:222759b391a1aaf241166672c8f99b2d4ada452e7b5319f3c6e8f265a37b5ad4 AS coordinator-runtime
 COPY --from=build /coordinator /opt/coordinator
 COPY --from=build /helper /opt/coordinator
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /opt/coordinator
+
+FROM build AS runner-build
+COPY docker/runner /src-runner
+RUN dotnet publish /src-runner/RegtestRunner.csproj -c Release -o /runner --no-self-contained -p:UseAppHost=false -p:ReferencePath=/coordinator
+
+FROM coordinator-runtime
+COPY --from=runner-build /runner /opt/regtest

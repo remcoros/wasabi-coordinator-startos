@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ReferencePath Condition="'$(ReferencePath)' == ''">/coordinator</ReferencePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <Reference Include="WalletWasabi"><HintPath>$(ReferencePath)/WalletWasabi.dll</HintPath></Reference>
+    <Reference Include="NBitcoin"><HintPath>$(ReferencePath)/NBitcoin.dll</HintPath></Reference>
+    <Reference Include="NBitcoin.Secp256k1"><HintPath>$(ReferencePath)/NBitcoin.Secp256k1.dll</HintPath></Reference>
+    <Reference Include="WabiSabi"><HintPath>$(ReferencePath)/WabiSabi.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>
