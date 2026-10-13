@@ -13,7 +13,7 @@ name: Sync next
 # or the next merge back re-introduces the stale copy.
 on:
   push:
-    branches: ['testnet4']
+    branches: ['main', 'testnet4', 'regtest']
   workflow_dispatch:
 
 jobs:

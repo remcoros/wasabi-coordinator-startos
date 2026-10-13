@@ -5,7 +5,7 @@ export const manifest = setupManifest({
   id: 'wasabi-coordinator-testnet',
   title: 'Wasabi Coordinator (Testnet4)',
   license: 'MIT',
-  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-testnet-startos',
+  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-startos',
   upstreamRepo: 'https://github.com/WalletWasabi/WalletWasabi',
   marketingUrl: 'https://wasabiwallet.io/',
   donationUrl: null,

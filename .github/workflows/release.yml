@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*'
+      - 'v*.*_*-testnet4'
 
 jobs:
   release:
