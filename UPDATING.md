@@ -1,0 +1,12 @@
+# Updating Wasabi Coordinator
+
+The coordinator executable and its runtime libraries come from the official Linux release archives. The package's `Dockerfile` pins the upstream version and the release-signing fingerprint; `startos/versions/current.ts` carries the StartOS package version. The image builds from the signed x64 and ARM64 archives. Both signatures and the signed SHA-256 list must verify in Docker before extraction. Do not substitute unsigned binaries or copy the wallet executables into the final image.
+
+1. Confirm the desired tag in [WalletWasabi releases](https://github.com/WalletWasabi/WalletWasabi/releases) and read its upstream change notes. Confirm Linux x64 and ARM64 archives, matching detached `.asc` signatures, and a clearsigned `SHA256SUMS.asc` exist.
+2. Confirm the release key fingerprint against the upstream installation documentation and `PGP.txt` from the chosen source revision. If the developer key changed, establish the new identity independently before editing the Dockerfile.
+3. Update `WASABI_VERSION` in `Dockerfile` and keep the full expected key fingerprint there. The build downloads the matching archive, signatures, checksum list, and key from that release and its source tag, verifies them inline, then removes the downloaded files. Rebuild both architectures; the build must reject a changed archive, signature, checksum, or signing key.
+4. Recheck the coordinator's native config schema, URL/API routes, RPC and cookie behavior, connection-string fields, Nostr announcement shape, and output-key derivation before changing `startos/fileModels`, actions, or the package-owned helper.
+5. Update `startos/versions/current.ts` and its translated release notes. Add a migration only when old persisted data actually needs conversion. Keep Mainnet and Testnet4 package changes aligned while preserving their distinct network IDs and Bitcoin dependencies.
+6. Run `npx tsc --noEmit` and the SDK Prettier check, build x86_64 and aarch64, and complete disposable real-node regtest rounds against the exact coordinator image. Install the Testnet4 package before Mainnet; exercise setup, actions, health, restart, backup/restore, and interface reachability without public-network spending. Keep development evidence outside the package repository.
+
+The image base and builder are pinned by digest. Review newer .NET runtime images independently of the Wasabi release. Do not turn a source probe or a green TypeScript check into a claim that a CoinJoin has completed.

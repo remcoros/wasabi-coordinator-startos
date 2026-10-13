@@ -1,0 +1,70 @@
+import { FileHelper, z } from '@start9labs/start-sdk'
+import { sdk } from '../sdk'
+import { profile } from '../utils'
+
+const announcementShape = z.looseObject({
+  CoordinatorName: z.string().catch('Coordinator'),
+  IsEnabled: z.boolean().catch(false),
+  CoordinatorDescription: z.string().catch('WabiSabi Coinjoin Coordinator'),
+  CoordinatorUri: z.string().catch(''),
+  AbsoluteMinInputCount: z.number().catch(21),
+  ReadMoreUri: z.string().catch(''),
+  RelayUris: z.array(z.string()).catch(['wss://relay.primal.net']),
+  Key: z.string().catch(''),
+})
+
+export const shape = z.looseObject({
+  Network: z.literal(profile.network).catch(profile.network),
+  MainNetBitcoinRpcUri: z.string().catch('http://localhost:8332'),
+  TestNetBitcoinRpcUri: z.string().catch('http://localhost:48332'),
+  RegTestBitcoinRpcUri: z.string().catch('http://localhost:18443'),
+  BitcoinRpcConnectionString: z.string().catch('user:password'),
+  ConfirmationTarget: z.number().catch(108),
+  DoSSeverity: z.string().catch('0.10'),
+  DoSMinTimeForFailedToVerify: z.string().catch('31d 0h 0m 0s'),
+  DoSMinTimeForCheating: z.string().catch('1d 0h 0m 0s'),
+  DoSPenaltyFactorForDisruptingConfirmation: z.number().catch(0.2),
+  DoSPenaltyFactorForDisruptingSignalReadyToSign: z.number().catch(1),
+  DoSPenaltyFactorForDisruptingSigning: z.number().catch(1),
+  DoSPenaltyFactorForDisruptingByDoubleSpending: z.number().catch(3),
+  DoSMinTimeInPrison: z.string().catch('0d 0h 20m 0s'),
+  MinRegistrableAmount: z.string().catch('0.00005'),
+  MaxRegistrableAmount: z.string().catch('43000.00'),
+  AllowNotedInputRegistration: z.boolean().catch(true),
+  StandardInputRegistrationTimeout: z.string().catch('0d 1h 0m 0s'),
+  BlameInputRegistrationTimeout: z.string().catch('0d 0h 3m 0s'),
+  ConnectionConfirmationTimeout: z.string().catch('0d 0h 1m 0s'),
+  OutputRegistrationTimeout: z.string().catch('0d 0h 1m 0s'),
+  TransactionSigningTimeout: z.string().catch('0d 0h 1m 0s'),
+  FailFastOutputRegistrationTimeout: z.string().catch('0d 0h 3m 0s'),
+  FailFastTransactionSigningTimeout: z.string().catch('0d 0h 1m 0s'),
+  RoundExpiryTimeout: z.string().catch('0d 0h 5m 0s'),
+  MaxInputCountByRound: z.number().catch(100),
+  MinInputCountByRoundMultiplier: z.number().catch(0.5),
+  MinInputCountByBlameRoundMultiplier: z.number().catch(0.4),
+  RoundDestroyerThreshold: z.number().catch(375),
+  CoordinatorExtPubKey: z.string().catch(''),
+  CoordinatorExtPubKeyCurrentDepth: z.number().catch(1),
+  MaxSuggestedAmountBase: z.string().catch('0.10'),
+  RoundParallelization: z.number().catch(1),
+  CoordinatorIdentifier: z.string().catch('CoinJoinCoordinatorIdentifier'),
+  AllowP2wpkhInputs: z.boolean().catch(true),
+  AllowP2trInputs: z.boolean().catch(true),
+  AllowP2wpkhOutputs: z.boolean().catch(true),
+  AllowP2trOutputs: z.boolean().catch(true),
+  AllowP2pkhOutputs: z.boolean().catch(false),
+  AllowP2shOutputs: z.boolean().catch(false),
+  AllowP2wshOutputs: z.boolean().catch(false),
+  DelayTransactionSigning: z.boolean().catch(false),
+  TrimCoordinatorOutput: z.boolean().catch(false),
+  PublishAsOnionService: z.literal(false).catch(false),
+  AnnouncerConfig: announcementShape.catch(() => announcementShape.parse({})),
+})
+
+// Native ToFile emits UTF-8 BOM. Preserve unknown fields and accept that format.
+export const config = FileHelper.raw<z.infer<typeof shape>>(
+  { base: sdk.volumes.main, subpath: 'Config.json' },
+  (value) => JSON.stringify(value, null, 2) + '\n',
+  (value) => JSON.parse(value.replace(/^\uFEFF/, '')),
+  (value) => shape.parse(value),
+)
