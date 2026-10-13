@@ -12,7 +12,7 @@ import {
   rpcHostId,
   rpcPort,
   rpccookiefile,
-} from 'bitcoin-core-startos/startos/utils'
+} from 'bitcoin-core-testnet-startos/startos/utils'
 
 export const announcementAddresses = (effects: T.Effects) =>
   sdk.host.getOwn(effects, 'coordinator', (host) => {
@@ -41,13 +41,13 @@ export const announcementUrl = {
 }
 
 export const profile = {
-  network: 'Main',
-  chain: 'main',
-  discoveryNetwork: 'mainnet',
-  addressPrefix: 'bc',
-  keyVersions: [0x0488b21e, 0x04b24746], // xpub, zpub
-  bitcoinId: 'bitcoind',
-  rpcConfigKey: 'MainNetBitcoinRpcUri',
+  network: 'TestNet4',
+  chain: 'testnet4',
+  discoveryNetwork: 'testnet4',
+  addressPrefix: 'tb',
+  keyVersions: [0x043587cf, 0x045f1cf6], // tpub, vpub
+  bitcoinId: 'bitcoind-testnet',
+  rpcConfigKey: 'TestNetBitcoinRpcUri',
   rpcHostId,
   rpcPort,
   cookiePath: '/mnt/bitcoin/' + rpccookiefile,

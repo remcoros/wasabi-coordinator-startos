@@ -1,4 +1,4 @@
-# Wasabi Coordinator
+# Wasabi Coordinator (Testnet4)
 
 ## Documentation
 
@@ -10,12 +10,12 @@ The **Coordinator** interface is the address compatible wallets use to join your
 
 ## Getting set up
 
-1. Install Bitcoin and wait for it to finish synchronizing.
+1. Install Bitcoin Testnet4 and wait for it to finish synchronizing.
 2. In a wallet you control, export the native SegWit **account public key (xpub)** and copy its receiving address at index 1. Never enter a seed or private key.
 3. Under **1. Setup**, run **Set Receiving Account** and enter both values. Startup remains blocked until they match.
 4. Tor is enabled by default. Install Tor, or turn it off with **Configure Tor** under **4. Advanced** before starting.
 5. Under **2. Round Settings**, review **Configure Rounds** if you want different input counts or amounts. The default requires 50 of a maximum of 100 inputs.
-6. Share the **Coordinator** address with compatible wallets. To get a wallet connection string, enable a public interface address, choose it in **Configure Discovery** under **3. Discovery**, then run **Show Wallet Connection**. Nostr announcements can remain off.
+6. Share the Testnet4 **Coordinator** address with compatible wallets. To get a wallet connection string, enable a public interface address, choose it in **Configure Discovery** under **3. Discovery**, then run **Show Wallet Connection**. Nostr announcements can remain off.
 
 ## Running your coordinator
 

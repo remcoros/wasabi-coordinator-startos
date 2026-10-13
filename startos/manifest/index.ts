@@ -2,10 +2,10 @@ import { setupManifest } from '@start9labs/start-sdk'
 import { long, short } from './i18n'
 
 export const manifest = setupManifest({
-  id: 'wasabi-coordinator',
-  title: 'Wasabi Coordinator',
+  id: 'wasabi-coordinator-testnet',
+  title: 'Wasabi Coordinator (Testnet4)',
   license: 'MIT',
-  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-startos',
+  packageRepo: 'https://github.com/remcoros/wasabi-coordinator-testnet-startos',
   upstreamRepo: 'https://github.com/WalletWasabi/WalletWasabi',
   marketingUrl: 'https://wasabiwallet.io/',
   donationUrl: null,

@@ -11,7 +11,7 @@ export const dependencies = sdk.Dependencies.of()
       ),
       metadata: {
         title: 'Bitcoin',
-        icon: 'https://raw.githubusercontent.com/Start9Labs/bitcoin-core-startos/next/31.x/icon.svg',
+        icon: 'https://raw.githubusercontent.com/remcoros/bitcoind-testnet4-startos/31.x-testnet4/icon.svg',
       },
       versionRange: '>=31.1:0',
       kind: 'running',
