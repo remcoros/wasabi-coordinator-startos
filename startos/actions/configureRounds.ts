@@ -49,15 +49,6 @@ const roundSpec = sdk.InputSpec.of({
     true,
     'UTXOs above this amount cannot register.',
   ),
-  suggested: number(
-    'Suggested Input Amount',
-    10000000,
-    1,
-    2100000000000000,
-    'sat',
-    true,
-    'Base amount used to vary the suggested maximum input amount between rounds.',
-  ),
   parallel: number(
     'Simultaneous Rounds',
     1,
@@ -86,7 +77,6 @@ export const configureRounds = sdk.Action.withInput(
       blame: c.MinInputCountByBlameRoundMultiplier * 100,
       smallest: Math.round(Number(c.MinRegistrableAmount) * 1e8),
       largest: Math.round(Number(c.MaxRegistrableAmount) * 1e8),
-      suggested: Math.round(Number(c.MaxSuggestedAmountBase) * 1e8),
       parallel: c.RoundParallelization,
     }
   },
@@ -96,16 +86,9 @@ export const configureRounds = sdk.Action.withInput(
       1,
       Math.trunc(input.maximum * minimumMultiplier),
     )
-    if (
-      minimumInputs < 2 ||
-      input.smallest > input.largest ||
-      input.suggested < input.smallest ||
-      input.suggested > input.largest
-    )
+    if (minimumInputs < 2 || input.smallest > input.largest)
       throw new Error(
-        i18n(
-          'Require at least two inputs and keep the suggested amount within the accepted amount range.',
-        ),
+        i18n('Require at least two inputs and a valid input amount range.'),
       )
     await config.merge(effects, {
       MaxInputCountByRound: input.maximum,
@@ -113,7 +96,6 @@ export const configureRounds = sdk.Action.withInput(
       MinInputCountByBlameRoundMultiplier: input.blame / 100,
       MinRegistrableAmount: (input.smallest / 1e8).toFixed(8),
       MaxRegistrableAmount: (input.largest / 1e8).toFixed(8),
-      MaxSuggestedAmountBase: (input.suggested / 1e8).toFixed(8),
       RoundParallelization: input.parallel,
     })
     return {

@@ -112,7 +112,7 @@ const dict = {
   'Provides blockchain data, fee estimates, and transaction broadcast.': 71,
   'Readiness Penalty Factor': 72,
   'When off, public fee services and Nostr relays receive direct connections from this server.': 73,
-  'Require at least two inputs and keep the suggested amount within the accepted amount range.': 74,
+  'Require at least two inputs and a valid input amount range.': 74,
   'Blame Round Minimum (%)': 75,
   'Blame Round Registration': 76,
   'Bitcoin is unavailable.': 77,

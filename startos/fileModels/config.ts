@@ -45,7 +45,6 @@ export const shape = z.looseObject({
   RoundDestroyerThreshold: z.number().catch(375),
   CoordinatorExtPubKey: z.string().catch(''),
   CoordinatorExtPubKeyCurrentDepth: z.number().catch(1),
-  MaxSuggestedAmountBase: z.string().catch('0.10'),
   RoundParallelization: z.number().catch(1),
   CoordinatorIdentifier: z.string().catch('CoinJoinCoordinatorIdentifier'),
   AllowP2wpkhInputs: z.boolean().catch(true),
