@@ -1,4 +1,8 @@
 {
   "extends": "@start9labs/start-sdk/tsconfig.base.json",
-  "include": ["startos/**/*.ts", "node_modules/**/startos"]
+  "include": [
+    "startos/**/*.ts",
+    "node_modules/bitcoin-core-startos/startos/**/*.ts",
+    "node_modules/tor-startos/startos/utils/**/*.ts"
+  ]
 }

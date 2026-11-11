@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:e70cdb7f80b0348f5cb85f19a8f670fca061f033d57eed12fa003d58b0e06317 AS build
 ARG TARGETARCH
-ARG WASABI_VERSION=2.8.4
+ARG WASABI_VERSION=2.8.5
 ARG WASABI_SIGNING_FINGERPRINT=6FB3872B5D42292F59920797856348328949861E
 RUN apt-get update && apt-get install -y --no-install-recommends curl jq gnupg ca-certificates && rm -rf /var/lib/apt/lists/*
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

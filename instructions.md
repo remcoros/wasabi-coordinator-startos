@@ -31,4 +31,4 @@ In **Configure Discovery**, enter one or more relay URLs. At least one relay mus
 
 ## Limitations
 
-The coordinator does not hold spending keys or charge a coordination fee. Eligible leftover funds can be sent to the receiving account you choose; mining fees still apply. Check the receiving account carefully before changing it. New bans can be lost when you restart, and retry rounds may still require the normal minimum number of inputs. Bitcoin must be ready before startup. When Tor is enabled, it must also be ready. A dependency outage appears in health checks and can pause discovery. Restore the dependency and check **Round Status**.
+The coordinator does not hold spending keys or charge a coordination fee. Eligible leftover funds can be sent to the receiving account you choose; mining fees still apply. Check the receiving account carefully before changing it. Bitcoin must be ready before startup. When Tor is enabled, it must also be ready. A dependency outage appears in health checks and can pause discovery. Restore the dependency and check **Round Status**.

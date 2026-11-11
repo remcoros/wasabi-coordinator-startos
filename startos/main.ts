@@ -46,7 +46,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ready: {
         display: i18n('Coordinator'),
         fn: () => ({
-          result: 'waiting',
+          result: 'starting',
+          waiting: true,
           message,
         }),
       },
